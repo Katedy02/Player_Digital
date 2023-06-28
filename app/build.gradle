@@ -4,12 +4,13 @@ plugins {
 
 android {
     namespace 'com.example.player_digital'
-    compileSdk 33
+    compileSdk 34
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.player_digital"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
