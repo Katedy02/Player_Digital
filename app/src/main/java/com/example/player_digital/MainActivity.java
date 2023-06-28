@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         print("asfafsd");
     }
 
-    private void print(String asfafsd) {
+    private void print(String asfafsdwsdgsdgf) {
     }
 }
