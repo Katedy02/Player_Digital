@@ -35,12 +35,13 @@
 
      <SeekBar
          android:layout_width="300dp"
-         android:layout_height="15sp"
+         android:layout_height="wrap_content"
          android:progress="25"
+         android:layout_marginTop="20dp"
          android:progressTint="#ffffff"
          android:thumbTint="#ffffff"
          android:backgroundTint="#ffffff" />
-     
+
      <RelativeLayout
          android:layout_width="300dp"
          android:layout_height="wrap_content">
