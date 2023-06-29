@@ -90,7 +90,7 @@
               android:thumbTint="#ffffff" />
 
           <ImageView
-              android:layout_width="21dp"
+              android:layout_width="20dp"
               android:layout_height="20dp"
               android:src="@drawable/volume_up" />
      </LinearLayout>
