@@ -34,6 +34,7 @@
          android:layout_height="168dp" />
 
      <SeekBar
+         android:id="@+id/seekBarTime"
          android:layout_width="300dp"
          android:layout_height="15sp"
          android:progress="25"
@@ -46,6 +47,7 @@
          android:layout_width="300dp"
          android:layout_height="wrap_content">
           <TextView
+              android:id="@+id/tvTime"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="00:00"
@@ -53,6 +55,7 @@
               android:textStyle="normal"/>
 
           <TextView
+              android:id="@+id/tvDuration"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="03:00"
@@ -62,6 +65,7 @@
      </RelativeLayout>
 
      <ImageButton
+         android:id="@+id/play"
          android:layout_marginTop="30dp"
          android:layout_width="50dp"
          android:layout_height="50dp"
@@ -81,6 +85,7 @@
               android:src="@drawable/volume_off" />
 
           <SeekBar
+              android:id="@+id/seekBarVolume"
               android:layout_width="300dp"
               android:layout_height="wrap_content"
               android:layout_marginTop="20dp"
@@ -97,6 +102,7 @@
 
 
      <RelativeLayout
+
          android:layout_width="184dp"
          android:layout_height="wrap_content"
          android:layout_centerHorizontal="true"
