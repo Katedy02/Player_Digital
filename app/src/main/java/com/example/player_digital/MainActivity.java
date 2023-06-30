@@ -32,7 +32,27 @@ public class MainActivity extends AppCompatActivity {
         Player_Digital = MediaPlayer.create(this, R.raw.bad_bunny_mayores);
         Player_Digital.setLooping(true);
         Player_Digital.seekTo(0);
-        Player_Digital.setVolume(0.2f,0.2f);
+        Player_Digital.setVolume(0.5f,0.5f);
+
+    //    play.setOnClickListener(this);
+        seekBarVolume.setProgress(50);
+        seekBarVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean isFromUser) {
+                float volume=progress /100f;
+                Player_Digital.setVolume(volume,volume);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
 
         Player_Digital.start();
