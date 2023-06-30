@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton play;
 
     MediaPlayer Player_Digital;
-
+    Thread updateThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,48 @@ public class MainActivity extends AppCompatActivity {
 
 
         Player_Digital.start();
+        updateThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (Player_Digital != null && Player_Digital.isPlaying()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateUI();
+                        }
+                    });
 
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        updateThread.start();
     }
 
+    private void updateUI() {
+        int current = Player_Digital.getCurrentPosition();
+        int duration = Player_Digital.getDuration();
 
+        tvTime.setText(millisecondsToString(current));
+        tvDuration.setText(millisecondsToString(duration));
+        seekBarTime.setMax(duration);
+        seekBarTime.setProgress(current);
+    }
 
+    private String millisecondsToString(int milliseconds) {
+        int seconds = (milliseconds / 1000) % 60;
+        int minutes = (milliseconds / (1000 * 60)) % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
 }
+
+
+
+
+
+
+
