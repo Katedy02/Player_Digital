@@ -36,9 +36,9 @@
      <SeekBar
          android:id="@+id/seekBarTime"
          android:layout_width="300dp"
-         android:layout_height="15sp"
+         android:layout_height="30dp"
          android:progress="25"
-         android:layout_marginTop="200dp"
+         android:layout_marginTop="160dp"
          android:progressTint="#ffffff"
          android:thumbTint="#ffffff"
          android:backgroundTint="#ffffff" />
@@ -74,7 +74,7 @@
 
      <LinearLayout
          android:layout_width="match_parent"
-         android:layout_height="40dp"
+         android:layout_height="80dp"
          android:layout_marginTop="30dp"
          android:orientation="horizontal">
 
@@ -87,7 +87,7 @@
           <SeekBar
               android:id="@+id/seekBarVolume"
               android:layout_width="300dp"
-              android:layout_height="wrap_content"
+              android:layout_height="30dp"
               android:layout_marginTop="20dp"
               android:backgroundTint="#ffffff"
               android:progress="75"
