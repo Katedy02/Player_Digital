@@ -38,7 +38,7 @@
          android:layout_width="300dp"
          android:layout_height="15sp"
          android:progress="25"
-         android:layout_marginTop="20dp"
+         android:layout_marginTop="150dp"
          android:progressTint="#ffffff"
          android:thumbTint="#ffffff"
          android:backgroundTint="#ffffff" />
