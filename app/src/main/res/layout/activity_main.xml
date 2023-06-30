@@ -24,8 +24,8 @@
          android:text="Ariana Grande"
          android:textSize="20dp"
          android:textStyle="italic"
-          android:textColor="@color/white"
-          android:layout_marginBottom="20dp"/>
+         android:textColor="@color/white"
+         android:layout_marginBottom="20dp"/>
 
      <ImageView
          android:layout_width="280dp"
@@ -36,9 +36,9 @@
      <SeekBar
          android:id="@+id/seekBarTime"
          android:layout_width="300dp"
-         android:layout_height="30dp"
+         android:layout_height="15sp"
          android:progress="25"
-         android:layout_marginTop="160dp"
+         android:layout_marginTop="20dp"
          android:progressTint="#ffffff"
          android:thumbTint="#ffffff"
          android:backgroundTint="#ffffff" />
@@ -65,11 +65,11 @@
      </RelativeLayout>
 
      <ImageButton
-         android:id="@+id/play"
+         android:id="@+id/btnPlay"
          android:layout_marginTop="30dp"
          android:layout_width="50dp"
          android:layout_height="50dp"
-         android:background="@drawable/play"
+         android:background="@drawable/ic_play"
          android:importantForAccessibility="no" />
 
      <LinearLayout
@@ -87,7 +87,7 @@
           <SeekBar
               android:id="@+id/seekBarVolume"
               android:layout_width="300dp"
-              android:layout_height="30dp"
+              android:layout_height="wrap_content"
               android:layout_marginTop="20dp"
               android:backgroundTint="#ffffff"
               android:progress="75"
