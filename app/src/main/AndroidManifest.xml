@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Player_Digital"
         tools:targetApi="31">
         <activity
+            android:name=".adapter"
+            android:exported="false" />
+        <activity
+            android:name=".MusicListActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
