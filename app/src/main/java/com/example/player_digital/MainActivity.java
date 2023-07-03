@@ -2,12 +2,16 @@ package com.example.player_digital;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import java.io.IOException;
 
 import com.example.player_digital.R;
 
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MediaPlayer Player_Digital;
     Thread updateThread;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         seekBarVolume=findViewById(R.id.seekBarVolume);
         btnPlay = findViewById(R.id.btnPlay);
 
-        Player_Digital = MediaPlayer.create(this, R.raw.bad_bunny_mayores);
+
+        Player_Digital = MediaPlayer.create(this, R.raw.bella_ciao);
         Player_Digital.setLooping(true);
         Player_Digital.seekTo(0);
         Player_Digital.setVolume(0.2f,0.2f);
@@ -135,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         elapsedTime += seconds;
         return  elapsedTime;
     }
+
+
 
     @Override
     public void onClick(View view) {
