@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import java.io.IOException;
-
+import android.widget.ViewFlipper;
 import com.example.player_digital.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,12 +25,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     MediaPlayer Player_Digital;
     Thread updateThread;
+    ViewFlipper viewFlipper;
+    ImageView next;
+    ImageView previous;
 
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewFlipper=(ViewFlipper)findViewById(R.id.viewFlipper);
+        next =  findViewById(R.id.next);
+        previous=   findViewById(R.id.previous);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("hgf","cde");
+            }
+        });
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("ggg","dqw");
+            }
+        });
 
 
         tvTime=findViewById(R.id.tvTime);
@@ -144,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnPlay) {
@@ -157,8 +179,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnPlay.setBackgroundResource(R.drawable.pause);
             }
         }
+        if (view == next) {
+            viewFlipper.showNext();
+        }
+        else if (view == previous) {
+            viewFlipper.showPrevious();
+        }
     }
+
 }
+
+
 
 
 
