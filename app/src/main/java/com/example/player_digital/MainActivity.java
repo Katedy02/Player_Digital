@@ -19,12 +19,12 @@ import com.example.player_digital.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView tvTime, tvDuration;
+    TextView tvTime, tvDuration,tvTitle, tvArtist;
     SeekBar seekBarTime, seekBarVolume;
     ImageButton btnPlay;
 
     MediaPlayer Player_Digital;
-    Thread updateThread;
+
     ViewFlipper viewFlipper;
     ImageView next;
     ImageView previous;
@@ -35,9 +35,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         viewFlipper=(ViewFlipper)findViewById(R.id.viewFlipper);
-        next =  findViewById(R.id.next);
-        previous=   findViewById(R.id.previous);
+        next = findViewById(R.id.next);
+        previous= findViewById(R.id.previous);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,12 +58,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         seekBarTime=findViewById(R.id.seekBarTime);
         seekBarVolume=findViewById(R.id.seekBarVolume);
         btnPlay = findViewById(R.id.btnPlay);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvArtist = findViewById(R.id.tvArtist);
 
 
         Player_Digital = MediaPlayer.create(this, R.raw.bella_ciao);
         Player_Digital.setLooping(true);
         Player_Digital.seekTo(0);
-        Player_Digital.setVolume(0.2f,0.2f);
+        Player_Digital.setVolume(0.5f,0.5f);
 
 
         String duration = millisecondsToString(Player_Digital.getDuration());
@@ -108,26 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        updateThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (Player_Digital != null && Player_Digital.isPlaying()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateUI();
-                        }
-                        private void updateUI() {
-                        }
-                    });
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
