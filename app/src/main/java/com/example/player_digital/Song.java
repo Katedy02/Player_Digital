@@ -1,6 +1,8 @@
 package com.example.player_digital;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable {
 
         private String title;
         private String artist;

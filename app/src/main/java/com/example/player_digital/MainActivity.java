@@ -1,10 +1,12 @@
 package com.example.player_digital;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Handler;
 import android.util.Log;
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Song song =(Song) getIntent().getSerializableExtra("song");
 
         viewFlipper=(ViewFlipper)findViewById(R.id.viewFlipper);
         next = findViewById(R.id.next);
@@ -61,8 +64,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvTitle = findViewById(R.id.tvTitle);
         tvArtist = findViewById(R.id.tvArtist);
 
+        tvTitle.setText(song.getTitle());
+        tvArtist.setText(song.getArtist());
 
-        Player_Digital = MediaPlayer.create(this, R.raw.bella_ciao);
+        Player_Digital = new  MediaPlayer();
+        try {
+            Player_Digital.setDataSource(song.getPath());
+            Player_Digital.prepare();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Player_Digital.setLooping(true);
         Player_Digital.seekTo(0);
         Player_Digital.setVolume(0.5f,0.5f);
@@ -169,6 +180,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (view == previous) {
             viewFlipper.showPrevious();
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        if (item.getItemId()==android.R.id.home){
+            finish();
+            if(Player_Digital.isPlaying()){
+                Player_Digital.stop();
+            }
+        }
+            return super.onOptionsItemSelected(item);
     }
 
 }
