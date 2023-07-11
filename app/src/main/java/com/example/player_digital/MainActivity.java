@@ -1,12 +1,9 @@
 package com.example.player_digital;
 
-import static com.example.player_digital.MusicListActivity.REQUEST_PERMISSION;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -22,7 +19,6 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -31,20 +27,18 @@ import android.widget.ViewFlipper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView tvTime, tvDuration,tvTitle, tvArtist;
+    TextView tvTime, tvDuration,tvTitle,tvArtist;
     SeekBar seekBarTime, seekBarVolume;
-    ImageButton btnPlay;
+    ImageButton btnPlay,playlist;
 
-    MediaPlayer Player_Digital;
+    private static MediaPlayer Player_Digital;
 
     ViewFlipper viewFlipper;
     ImageView next;
     ImageView previous;
-    Button playlist;
     private Intent mainIntent;
     ArrayList<Song> songArrayList;
 
@@ -70,8 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewFlipper = (ViewFlipper)findViewById(R.id.viewFlipper);
         next = findViewById(R.id.next);
         previous= findViewById(R.id.previous);
-        playlist=findViewById(R.id.button);
-        Player_Digital = new MediaPlayer();
+        playlist=findViewById(R.id.imageButton);
+
+        if(Player_Digital!=null){
+            Player_Digital.reset();
+        }else{
+            Player_Digital = new MediaPlayer();
+        }
 
         tvTime=findViewById(R.id.tvTime);
         tvDuration=findViewById(R.id.tvDuration);
@@ -119,17 +118,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainIntent = getIntent();
         if(mainIntent.getSerializableExtra("song")!=null){
             song =(Song) getIntent().getSerializableExtra("song");
-            //tvTitle.setText(mediaIter);
-            //tvArtist.setText(mediaIter);
+            tvTitle.setText(song.getTitle());
         }else{
             song = songArrayList.get(mediaIter);
+            setMeta();
         }
-
-
-
-
-        setMeta();
-
 
         try {
             Player_Digital.setDataSource(song.getPath());
@@ -268,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     private void getSongs() {
         ContentResolver contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -323,20 +316,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Permissions are denied
                     }
                 });
-//sgsdvsdvs
+
         requestPermissionLauncher.launch(permissions);
     }
 
     private void setMeta(){
         tvTitle.setText(songArrayList.get(mediaIter).getTitle());
-        tvArtist.setText(songArrayList.get(mediaIter).getArtist());
+        tvArtist.setText(song.getArtist());
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Player_Digital.stop();
-        Player_Digital.release();
-        Player_Digital = null;
-    }
+
 }
