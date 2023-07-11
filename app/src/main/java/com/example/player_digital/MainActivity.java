@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -21,6 +22,7 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -42,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ViewFlipper viewFlipper;
     ImageView next;
     ImageView previous;
-
+    Button playlist;
+    private Intent mainIntent;
     ArrayList<Song> songArrayList;
 
     private Song song;
@@ -67,7 +70,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewFlipper = (ViewFlipper)findViewById(R.id.viewFlipper);
         next = findViewById(R.id.next);
         previous= findViewById(R.id.previous);
+        playlist=findViewById(R.id.button);
         Player_Digital = new MediaPlayer();
+
+        tvTime=findViewById(R.id.tvTime);
+        tvDuration=findViewById(R.id.tvDuration);
+        seekBarTime=findViewById(R.id.seekBarTime);
+        seekBarVolume=findViewById(R.id.seekBarVolume);
+        btnPlay = findViewById(R.id.btnPlay);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvArtist = findViewById(R.id.tvArtist);
+
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         });
+        playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openPlayer_Digital = new Intent(MainActivity.this,MusicListActivity.class);
+                startActivity(openPlayer_Digital);
+            }
+        });
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,15 +116,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("ggg","iteer" +mediaIter);
             }
         });
+        mainIntent = getIntent();
+        if(mainIntent.getSerializableExtra("song")!=null){
+            song =(Song) getIntent().getSerializableExtra("song");
+            //tvTitle.setText(mediaIter);
+            //tvArtist.setText(mediaIter);
+        }else{
+            song = songArrayList.get(mediaIter);
+        }
 
-        song = songArrayList.get(mediaIter);
-        tvTime=findViewById(R.id.tvTime);
-        tvDuration=findViewById(R.id.tvDuration);
-        seekBarTime=findViewById(R.id.seekBarTime);
-        seekBarVolume=findViewById(R.id.seekBarVolume);
-        btnPlay = findViewById(R.id.btnPlay);
-        tvTitle = findViewById(R.id.tvTitle);
-        tvArtist = findViewById(R.id.tvArtist);
+
+
 
         setMeta();
 
@@ -218,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnPlay) {
+            Log.d(TAG, "onClick: "+ Player_Digital.isPlaying());
             if(Player_Digital.isPlaying()) {
                 // is playing
                 Player_Digital.pause();
@@ -305,7 +328,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setMeta(){
-        tvTitle.setText(song.getTitle());
-        tvArtist.setText(song.getArtist());
+        tvTitle.setText(songArrayList.get(mediaIter).getTitle());
+        tvArtist.setText(songArrayList.get(mediaIter).getArtist());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Player_Digital.stop();
+        Player_Digital.release();
+        Player_Digital = null;
     }
 }

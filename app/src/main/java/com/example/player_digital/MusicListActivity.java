@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -35,13 +36,8 @@ public class MusicListActivity extends AppCompatActivity {
         songArrayList = new ArrayList<>();
         SongsAdapter = new SongsAdapter(this, songArrayList);
         lvSongs.setAdapter(SongsAdapter);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-            return;
-        } else {
+        getSongs();
 
-            getSongs();
-        }
 
         lvSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -54,19 +50,6 @@ public class MusicListActivity extends AppCompatActivity {
         });
 
     }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getSongs();
-            }
-        }
-    }
-
 
     private void getSongs() {
         ContentResolver contentResolver = getContentResolver();
@@ -82,6 +65,8 @@ public class MusicListActivity extends AppCompatActivity {
                 String artist = songCursor.getString(indexArtist);
                 String path = songCursor.getString(indexData);
                 songArrayList.add(new Song(title, artist, path));
+
+                Log.d("TAG", "getSongs: "+songArrayList.size());
 
             } while (songCursor.moveToNext());
 
