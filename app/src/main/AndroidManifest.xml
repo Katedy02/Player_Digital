@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +15,7 @@
         android:theme="@style/Theme.Player_Digital"
         tools:targetApi="31">
         <activity
-            android:name=".adapter"
+            android:name=".SongsAdapter"
             android:exported="false" />
         <activity
             android:name=".MusicListActivity"

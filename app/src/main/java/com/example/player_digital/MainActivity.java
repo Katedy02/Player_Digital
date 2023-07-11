@@ -1,10 +1,24 @@
 package com.example.player_digital;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.example.player_digital.MusicListActivity.REQUEST_PERMISSION;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -12,6 +26,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,6 +43,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView next;
     ImageView previous;
 
+    ArrayList<Song> songArrayList;
+
+    private Song song;
+
+    private int mediaIter=0;
+    private final String TAG = "MainActivity";
+
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,23 +58,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
 
-        viewFlipper=(ViewFlipper)findViewById(R.id.viewFlipper);
+        songArrayList = new ArrayList<>();
+
+        checkPermission();
+
+        getSongs();
+
+        viewFlipper = (ViewFlipper)findViewById(R.id.viewFlipper);
         next = findViewById(R.id.next);
         previous= findViewById(R.id.previous);
+        Player_Digital = new MediaPlayer();
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("hgf","cde");
+                if (mediaIter < songArrayList.size()) {
+                    Log.d("hgf", "cde");
+                    mediaIter =mediaIter +1;
+                    Player_Digital.reset();
+                    playMedia();
+                    setMeta();
+                }
+                Log.d("ggg","iteer" +mediaIter);
             }
+
+
         });
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("ggg","dqw");
+                if(mediaIter>=1){
+                    mediaIter=mediaIter-1;
+                    Player_Digital.reset();
+                    playMedia();
+                    setMeta();
+                }
+                Log.d("ggg","iteer" +mediaIter);
             }
         });
 
-
+        song = songArrayList.get(mediaIter);
         tvTime=findViewById(R.id.tvTime);
         tvDuration=findViewById(R.id.tvDuration);
         seekBarTime=findViewById(R.id.seekBarTime);
@@ -57,8 +106,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvTitle = findViewById(R.id.tvTitle);
         tvArtist = findViewById(R.id.tvArtist);
 
+        setMeta();
 
-        Player_Digital = MediaPlayer.create(this, R.raw.bella_ciao);
+
+        try {
+            Player_Digital.setDataSource(song.getPath());
+            Player_Digital.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Player_Digital.setLooping(true);
         Player_Digital.seekTo(0);
         Player_Digital.setVolume(0.5f,0.5f);
@@ -131,6 +187,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
+    private void playMedia() {
+        try {
+            Player_Digital.setDataSource(songArrayList.get(mediaIter).getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+
+        }
+        try {
+            Player_Digital.prepare();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Player_Digital.start();
+    }
+
     public String millisecondsToString(int time) {
         String elapsedTime = "";
         int minutes = time / 1000 / 60;
@@ -142,10 +215,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         elapsedTime += seconds;
         return  elapsedTime;
     }
-
-
-
-
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnPlay) {
@@ -166,16 +235,77 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             viewFlipper.showPrevious();
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        if (item.getItemId()==android.R.id.home){
+            finish();
+            if(Player_Digital.isPlaying()){
+                Player_Digital.stop();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    private void getSongs() {
+        ContentResolver contentResolver = getContentResolver();
+        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
+        Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
+        if (songCursor != null && songCursor.moveToFirst()) {
+            int indexTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int indexArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int indexData = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
+            do {
+                String title = songCursor.getString(indexTitle);
+                String artist = songCursor.getString(indexArtist);
+                String path = songCursor.getString(indexData);
+                songArrayList.add(new Song(title, artist, path));
+                Log.d(TAG, "getSongs: "+songArrayList.size());
+            } while (songCursor.moveToNext());
+            Log.d(TAG, "getSongs: "+songArrayList.size());
+        }
+
+    }
+    private void checkPermission(){
+        String[] permissions = new String[] {
+                Manifest.permission.READ_MEDIA_AUDIO
+
+        };
+        boolean areAllPermissionsGranted = true;
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                areAllPermissionsGranted = false;
+                break;
+            }
+        }
+
+        if (areAllPermissionsGranted) {
+            // Permissions are already granted
+        } else {
+            // Permissions are not granted, request the permissions
+        }
+        ActivityResultLauncher<String[]> requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions2 -> {
+                    boolean allPermissionsGranted = true;
+                    for (String permission : permissions2.keySet()) {
+                        if (!permissions2.get(permission)) {
+                            allPermissionsGranted = false;
+                            break;
+                        }
+                    }
+                    if (allPermissionsGranted) {
+                        // Permissions are granted
+                    } else {
+                        // Permissions are denied
+                    }
+                });
+
+        requestPermissionLauncher.launch(permissions);
+    }
+
+    private void setMeta(){
+        tvTitle.setText(song.getTitle());
+        tvArtist.setText(song.getArtist());
+    }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class Song implements Serializable {
 
-        private String title;
-        private String artist;
-        private String path;
+    private String title;
+    private String artist;
+    private String path;
     public  Song(String title, String artist,String path) {
 
         this.title = title;

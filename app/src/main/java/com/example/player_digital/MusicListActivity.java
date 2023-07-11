@@ -1,21 +1,19 @@
 package com.example.player_digital;
 
-
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -23,19 +21,20 @@ import java.util.ArrayList;
 
 public class MusicListActivity extends AppCompatActivity {
 
-    private static final int REQUEST_PERMISSION = 99;
+    static final int REQUEST_PERMISSION = 99;
     ArrayList<Song> songArrayList;
     ListView lvSongs;
-    adapter adapter;
+    SongsAdapter SongsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
+
         lvSongs = findViewById(R.id.lvSongs);
         songArrayList = new ArrayList<>();
-        adapter = new adapter(this, songArrayList);
-        lvSongs.setAdapter(adapter);
+        SongsAdapter = new SongsAdapter(this, songArrayList);
+        lvSongs.setAdapter(SongsAdapter);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
             return;
@@ -43,29 +42,31 @@ public class MusicListActivity extends AppCompatActivity {
 
             getSongs();
         }
-        lvSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-            public void onItemClick(AdapterView<?> adapterView,View view, int position, long l){
-            Song song =songArrayList.get(position);
-         Intent openMusicPlayer = new Intent(MusicListActivity.this,MainActivity.class);
-            openMusicPlayer.putExtra("song",song);
 
-        }
-       });
+        lvSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView,View view, int position, long l){
+                Song song =songArrayList.get(position);
+                Intent openPlayer_Digital = new Intent(MusicListActivity.this,MainActivity.class);
+                openPlayer_Digital.putExtra("song",song);
+                startActivity(openPlayer_Digital);
+            }
+        });
 
     }
 
 
-   @Override
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-       super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-       if (requestCode == REQUEST_PERMISSION) {
-           if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               getSongs();
-           }
-       }
-   }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getSongs();
+            }
+        }
+    }
+
 
     private void getSongs() {
         ContentResolver contentResolver = getContentResolver();
@@ -85,20 +86,8 @@ public class MusicListActivity extends AppCompatActivity {
             } while (songCursor.moveToNext());
 
         }
-        adapter.notifyDataSetChanged();
+        SongsAdapter.notifyDataSetChanged();
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

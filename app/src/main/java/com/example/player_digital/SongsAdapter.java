@@ -12,12 +12,10 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 
-public class adapter extends ArrayAdapter<Song>{
-public adapter (@NonNull Context context ,@NonNull List<Song>objects){
+public class SongsAdapter extends ArrayAdapter<Song>{
 
-
-    super(context,0,objects);
-
+    public SongsAdapter(@NonNull Context context , @NonNull List<Song>objects){
+        super(context,0,objects);
     }
 
     @NonNull
